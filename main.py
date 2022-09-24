@@ -135,3 +135,6 @@ def main():
                                              shuffle=True, num_workers=2)
 
     print(model)
+
+if __name__ == '__main__':
+    main()
