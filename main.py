@@ -24,7 +24,6 @@ from torch.nn.functional import adaptive_avg_pool2d
 
 from PIL import Image
 
-import matplotlib.pyplot as plt
 import sys
 import numpy as np
 import os
