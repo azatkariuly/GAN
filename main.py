@@ -20,7 +20,6 @@ import torchvision.models as models
 from preprocess import get_transform
 from data import get_dataset
 
-from scipy import linalg
 from torch.nn.functional import adaptive_avg_pool2d
 
 from PIL import Image
