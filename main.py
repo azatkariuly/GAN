@@ -15,7 +15,6 @@ import torchvision.utils as vutils
 import torch.nn.functional as F
 import numpy as np
 import torchvision.models as models
-from IPython.display import HTML
 
 # @azatkariuly
 from preprocess import get_transform
