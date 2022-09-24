@@ -14,9 +14,7 @@ import torchvision.transforms as transforms
 import torchvision.utils as vutils
 import torch.nn.functional as F
 import numpy as np
-import matplotlib.pyplot as plt
 import torchvision.models as models
-import matplotlib.animation as animation
 from IPython.display import HTML
 
 # @azatkariuly
