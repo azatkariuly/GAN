@@ -103,14 +103,6 @@ def main():
     best_res = 0
     args = parser.parse_args()
 
-    if args.save is '':
-        args.save = datetime.now().strftime('/garbage')
-    save_path = os.path.join(args.results_dir, args.save)
-    if not os.path.exists(save_path):
-        os.makedirs(save_path)
-
-    logging.info("saving to %s", save_path)
-    logging.debug("run arguments: %s", args)
 
     if 'cuda' in args.type:
         args.gpus = [int(i) for i in args.gpus.split(',')]
