@@ -102,8 +102,6 @@ def main():
     best_res = 0
     args = parser.parse_args()
 
-    if args.evaluate:
-        args.results_dir = './results'
     if args.save is '':
         args.save = datetime.now().strftime('/garbage')
     save_path = os.path.join(args.results_dir, args.save)
