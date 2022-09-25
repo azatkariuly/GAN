@@ -126,7 +126,7 @@ def main():
 
     print('Training..')
     for epoch in range(args.epochs):
-        for i, data in enumerate(dataloader):
+        for i, data in enumerate(dataloader, 0):
 
             print(i, data)
             '''
