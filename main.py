@@ -86,6 +86,7 @@ def main():
     best_res = 0
     args = parser.parse_args()
 
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     if 'cuda' in args.type:
         args.gpus = [int(i) for i in args.gpus.split(',')]
@@ -133,9 +134,9 @@ def main():
             ## Train with all-real batch
             netD.zero_grad()
             # Format batch
-            real_cpu = data[0].type(args.type)
+            real_cpu = data[0].to(device)
             b_size = real_cpu.size(0)
-            print('CUDA TU{PE}:', args.type)
+            print('CUDA TYPE:', args.type)
             label = torch.full((b_size,), real_label, device=device)
     #         # add some noise to the input to discriminator
 
