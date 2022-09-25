@@ -91,12 +91,6 @@ device = torch.device("cuda:0" if (torch.cuda.is_available() and ngpu > 0) else 
 my_model = my_models.__dict__[args.model]
 model_config = {'dataset': args.dataset}
 
-netG, netD = my_model(**model_config)
-
-netG, netD = netG.to(device), netD.to(device)
-netG.apply(weights_init)
-netD.apply(weights_init)
-
 # custom weights initialization called on netG and netD
 def weights_init(m):
     classname = m.__class__.__name__
@@ -106,18 +100,13 @@ def weights_init(m):
         nn.init.normal_(m.weight.data, 1.0, 0.02)
         nn.init.constant_(m.bias.data, 0)
 
-# Create the generator
-netG = Generator(ngpu).to(device)
-netG.apply(weights_init)
-print(netG)
+netG, netD = my_model(**model_config)
 
-# Create the Discriminator
-netD = Discriminator(ngpu).to(device)
-# Apply the weights_init function to randomly initialize all weights
-#  to mean=0, stdev=0.2.
+netG, netD = netG.to(device), netD.to(device)
+netG.apply(weights_init)
 netD.apply(weights_init)
-# Print the model
-print(netD)
+
+print(netG, netD)
 
 # Initialize BCELoss function
 criterion = nn.BCELoss()
