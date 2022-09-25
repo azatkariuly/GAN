@@ -107,10 +107,10 @@ def main():
     model = models.__dict__[args.model]
     model_config = {'dataset': args.dataset}
 
-    netG, netD = model(**model_config)
+    model = model(**model_config)
     logging.info("created model with configuration: %s", model_config)
 
-    print(netG, netD)
+    print(model)
     return
 
     # Data loading code
