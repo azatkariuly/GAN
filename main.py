@@ -101,6 +101,9 @@ def main():
     model_config = {'dataset': args.dataset}
 
     netG, netD = model(**model_config)
+
+    netG = netG.to(device)
+    netD = netD.to(device)
     logging.info("created model with configuration: %s", model_config)
 
     # Data loading code
