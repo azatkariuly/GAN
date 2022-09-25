@@ -70,18 +70,8 @@ parser.add_argument('--dis_lr', default=4e-4, type=float,
 SEED=42
 random.seed(SEED)
 torch.manual_seed(SEED)
-# Batch size during training
-batch_size = 128
 # Spatial size of training images. All images will be resized to this size using a transformer.
 image_size = 64
-# Number of channels in the training images. For color images this is 3
-nc = 3
-# Size of z latent vector (i.e. size of generator input)
-nz = 100
-# Size of feature maps in generator
-ngf = 64
-# Size of feature maps in discriminator
-ndf = 64
 # Number of training epochs
 num_epochs = 70
 # different Learning rate for optimizers
@@ -115,10 +105,13 @@ def main():
     # create model
     logging.info("creating model %s", args.model)
     model = models.__dict__[args.model]
-    model_config = {} # {'dataset': args.dataset}
+    model_config = {'dataset': args.dataset}
 
-    model = model(**model_config)
+    netG, netD = model(**model_config)
     logging.info("created model with configuration: %s", model_config)
+
+    print(netG, netD)
+    return
 
     # Data loading code
     default_transform = get_transform(args.dataset)
@@ -126,7 +119,16 @@ def main():
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size,
                                              shuffle=True, num_workers=2)
 
-    print(model)
+    # Initialize BCELoss function
+    criterion = nn.BCELoss()
+
+    # Establish convention for real and fake labels during training
+    real_label = 1.0
+    fake_label = 0.0
+
+    # Setup Adam optimizers for both G and D
+    optimizerD = optim.Adam(netD.parameters(), lr=args.dis_lr, betas=(0.5, 0.999))
+    optimizerG = optim.Adam(netD.parameters(), lr=args.gen_lr, betas=(0.5, 0.999))
 
 if __name__ == '__main__':
     main()
