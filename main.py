@@ -127,6 +127,9 @@ def main():
     print('Training..')
     for epoch in range(args.epochs):
         for i, data in enumerate(dataloader):
+
+            print(i, data)
+            '''
             ############################
             # (1) Update D network: maximize log(D(x)) + log(1 - D(G(z)))
             ###########################
@@ -200,6 +203,6 @@ def main():
         print('[%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tFretchet_Distance: %.4f'
                       % (epoch+1, num_epochs,
                           errD.item(), errG.item(),fretchet_dist))
-
+'''
 if __name__ == '__main__':
     main()
