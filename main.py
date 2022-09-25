@@ -70,6 +70,7 @@ parser.add_argument('--dis_lr', default=4e-4, type=float,
 SEED=42
 random.seed(SEED)
 torch.manual_seed(SEED)
+nz = 100
 # Spatial size of training images. All images will be resized to this size using a transformer.
 image_size = 64
 # Number of training epochs
@@ -102,8 +103,7 @@ def main():
 
     netG, netD = model(**model_config)
 
-    netG = netG.to(device)
-    netD = netD.to(device)
+    netG, netD = netG.to(device), netD.to(device)
     logging.info("created model with configuration: %s", model_config)
 
     # Data loading code
