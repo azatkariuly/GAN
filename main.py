@@ -104,7 +104,7 @@ def main():
 
     # Data loading code
     transform = get_transform(args.dataset)
-    dataset = get_dataset(args.dataset, transform)
+    dataset = get_dataset(args.dataset, transform=transform)
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size,
                                           shuffle=True, num_workers=2)
 
