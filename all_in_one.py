@@ -63,7 +63,7 @@ transform=transforms.Compose([
                                transforms.Normalize((0,0,0), (1,1,1)),])
 
 
-dataset = dset.CIFAR10(root='../input', train=True,
+dataset = dset.CIFAR10(root='../data/CIFAR10', train=True,
                                         download=True, transform=transform)
 dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size,
                                           shuffle=True, num_workers=2)
