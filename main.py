@@ -103,8 +103,8 @@ def main():
     model_config = {'dataset': args.dataset}
 
     netG, netD = model(**model_config)
-    netG.apply(weights_init)
-    netD.apply(weights_init)
+    # netG.apply(weights_init)
+    # netD.apply(weights_init)
 
     netG, netD = netG.to(device), netD.to(device)
     logging.info("created model with configuration: %s", model_config)
@@ -119,8 +119,8 @@ def main():
     criterion = nn.BCELoss()
 
     # Establish convention for real and fake labels during training
-    real_label = 1.0
-    fake_label = 0.0
+    real_label = 0.9
+    fake_label = 0.1
 
     # Setup Adam optimizers for both G and D
     optimizerD = optim.Adam(netD.parameters(), lr=args.dis_lr, betas=(0.5, 0.999))
