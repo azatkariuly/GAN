@@ -126,7 +126,7 @@ def main():
     img_list = []
     G_losses = []
     D_losses = []
-    iters = []
+    iters = 0
 
     print('Training..')
     for epoch in range(args.epochs):
@@ -139,7 +139,6 @@ def main():
             # Format batch
             real_cpu = data[0].to(device)
             b_size = real_cpu.size(0)
-            print('CUDA TYPE:', args.type)
             label = torch.full((b_size,), real_label, device=device)
     #         # add some noise to the input to discriminator
 
