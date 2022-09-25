@@ -103,16 +103,10 @@ def main():
     logging.info("created model with configuration: %s", model_config)
 
     # Data loading code
-    # transform = get_transform(args.dataset)
-    # dataset = get_dataset(args.dataset, transform)
+    transform = get_transform(args.dataset)
+    dataset = get_dataset(args.dataset, transform)
     # dataloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size,
     #                                          shuffle=True, num_workers=2)
-
-    transform=transforms.Compose([
-                               transforms.Resize(image_size),
-                               transforms.CenterCrop(image_size),
-                               transforms.ToTensor(),
-                               transforms.Normalize((0,0,0), (1,1,1)),])
 
     dataset = dset.CIFAR10(root='../data2', train=True,
                                         download=True, transform=transform)
