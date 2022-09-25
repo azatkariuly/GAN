@@ -428,8 +428,6 @@ for epoch in range(num_epochs):
                 fake_display = netG(fixed_noise).detach().cpu()
             img_list.append(vutils.make_grid(fake_display, padding=2, normalize=True))
 
-
-
         iters += 1
     G_losses.append(errG.item())
     D_losses.append(errD.item())

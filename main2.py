@@ -31,6 +31,7 @@ import os
 # print(os.listdir("../input"))
 
 import time
+from progress.bar import Bar as Bar
 
 model_names = sorted(name for name in my_models.__dict__
                      if name.islower() and not name.startswith("__")
@@ -307,10 +308,12 @@ img_list = []
 G_losses = []
 D_losses = []
 iters = 0
+best_res = float('inf')
 
 print("Starting Training Loop...")
 for epoch in range(num_epochs):
     # For each batch in the dataloader
+    bar = Bar('Processing', max=len(dataloader))
     for i, data in enumerate(dataloader, 0):
 
         ############################
@@ -365,9 +368,9 @@ for epoch in range(num_epochs):
         errG.backward()
         # Update G
         optimizerG.step()
-        if i%100 == 0:
-            print('[%d/%d]\t iteration %d/%d'
-                          % (epoch+1, num_epochs, i, len(dataloader)))
+
+        bar.suffix = '({batch}/{size}) Data: {data:.3f}'.format(batch=i+1, size=len(dataloader))
+        bar.next()
         # Check how the generator is doing by saving G's output on fixed_noise
         if (iters % 500 == 0) or ((epoch == num_epochs-1) and (i == len(dataloader)-1)):
             with torch.no_grad():
@@ -378,11 +381,13 @@ for epoch in range(num_epochs):
 
 
         iters += 1
+    bar.finish()
     G_losses.append(errG.item())
     D_losses.append(errD.item())
     fretchet_dist=calculate_fretchet(real_cpu,fake,model)
+    best_res = min(best_res, fretchet_dist)
     if ((epoch+1)%1==0):
 
-        print('[%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tFretchet_Distance: %.4f'
+        print('[%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tFretchet_Distance: %.4f\t Best FID: %.4f'
                       % (epoch+1, num_epochs,
-                         errD.item(), errG.item(),fretchet_dist))
+                         errD.item(), errG.item(), fretchet_dist, best_res))
