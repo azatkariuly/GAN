@@ -128,78 +128,78 @@ def main():
     for epoch in range(args.epochs):
         for i, data in enumerate(dataloader):
             ############################
-        # (1) Update D network: maximize log(D(x)) + log(1 - D(G(z)))
-        ###########################
-        ## Train with all-real batch
-        netD.zero_grad()
-        # Format batch
-        real_cpu = data[0].to(device)
-        b_size = real_cpu.size(0)
-        label = torch.full((b_size,), real_label, device=device)
-#         # add some noise to the input to discriminator
+            # (1) Update D network: maximize log(D(x)) + log(1 - D(G(z)))
+            ###########################
+            ## Train with all-real batch
+            netD.zero_grad()
+            # Format batch
+            real_cpu = data[0].to(device)
+            b_size = real_cpu.size(0)
+            label = torch.full((b_size,), real_label, device=device)
+    #         # add some noise to the input to discriminator
 
-        real_cpu=0.9*real_cpu+0.1*torch.randn((real_cpu.size()), device=device)
-        # Forward pass real batch through D
-        output = netD(real_cpu).view(-1)
-        # Calculate loss on all-real batch
-        errD_real = criterion(output, label)
-        # Calculate gradients for D in backward pass
-        errD_real.backward()
-        ## Train with all-fake batch
-        # Generate batch of latent vectors
-        noise = torch.randn(b_size, nz, 1, 1, device=device)
-        # Generate fake image batch with G
-        fake = netG(noise)
-        label.fill_(fake_label)
+            real_cpu=0.9*real_cpu+0.1*torch.randn((real_cpu.size()), device=device)
+            # Forward pass real batch through D
+            output = netD(real_cpu).view(-1)
+            # Calculate loss on all-real batch
+            errD_real = criterion(output, label)
+            # Calculate gradients for D in backward pass
+            errD_real.backward()
+            ## Train with all-fake batch
+            # Generate batch of latent vectors
+            noise = torch.randn(b_size, nz, 1, 1, device=device)
+            # Generate fake image batch with G
+            fake = netG(noise)
+            label.fill_(fake_label)
 
-        fake=0.9*fake+0.1*torch.randn((fake.size()), device=device)
-        # Classify all fake batch with D
-        output = netD(fake.detach()).view(-1)
-        # Calculate D's loss on the all-fake batch
-        errD_fake = criterion(output, label)
-        # Calculate the gradients for this batch
-        errD_fake.backward()
-        # Add the gradients from the all-real and all-fake batches
-        errD = errD_real + errD_fake
-        # Update D
-        optimizerD.step()
+            fake=0.9*fake+0.1*torch.randn((fake.size()), device=device)
+            # Classify all fake batch with D
+            output = netD(fake.detach()).view(-1)
+            # Calculate D's loss on the all-fake batch
+            errD_fake = criterion(output, label)
+            # Calculate the gradients for this batch
+            errD_fake.backward()
+            # Add the gradients from the all-real and all-fake batches
+            errD = errD_real + errD_fake
+            # Update D
+            optimizerD.step()
 
-        ############################
-        # (2) Update G network: maximize log(D(G(z)))
-        ###########################
-        netG.zero_grad()
-        label.fill_(real_label)  # fake labels are real for generator cost
-        # Since we just updated D, perform another forward pass of all-fake batch through D
-        output = netD(fake).view(-1)
-        # Calculate G's loss based on this output
-        errG = criterion(output, label)
-        D_G_z2 = output.mean().item()
+            ############################
+            # (2) Update G network: maximize log(D(G(z)))
+            ###########################
+            netG.zero_grad()
+            label.fill_(real_label)  # fake labels are real for generator cost
+            # Since we just updated D, perform another forward pass of all-fake batch through D
+            output = netD(fake).view(-1)
+            # Calculate G's loss based on this output
+            errG = criterion(output, label)
+            D_G_z2 = output.mean().item()
 
-        # Calculate gradients for G
-        errG.backward()
-        # Update G
-        optimizerG.step()
-        if i%100 == 0:
-            print('[%d/%d]\t iteration %d/%d'
-                          % (epoch+1, num_epochs, i, len(dataloader)))
-        # Check how the generator is doing by saving G's output on fixed_noise
-        if (iters % 500 == 0) or ((epoch == num_epochs-1) and (i == len(dataloader)-1)):
-            with torch.no_grad():
-                fixed_noise = torch.randn(ngf, nz, 1, 1, device=device)
-                fake_display = netG(fixed_noise).detach().cpu()
-            img_list.append(vutils.make_grid(fake_display, padding=2, normalize=True))
+            # Calculate gradients for G
+            errG.backward()
+            # Update G
+            optimizerG.step()
+            if i%100 == 0:
+                print('[%d/%d]\t iteration %d/%d'
+                              % (epoch+1, num_epochs, i, len(dataloader)))
+            # Check how the generator is doing by saving G's output on fixed_noise
+            if (iters % 500 == 0) or ((epoch == num_epochs-1) and (i == len(dataloader)-1)):
+                with torch.no_grad():
+                    fixed_noise = torch.randn(ngf, nz, 1, 1, device=device)
+                    fake_display = netG(fixed_noise).detach().cpu()
+                img_list.append(vutils.make_grid(fake_display, padding=2, normalize=True))
 
 
 
-        iters += 1
-    G_losses.append(errG.item())
-    D_losses.append(errD.item())
-    fretchet_dist=0 #calculate_fretchet(real_cpu,fake,model)
-    # if ((epoch+1)%5==0):
+            iters += 1
+        G_losses.append(errG.item())
+        D_losses.append(errD.item())
+        fretchet_dist=0 #calculate_fretchet(real_cpu,fake,model)
+        # if ((epoch+1)%5==0):
 
-    print('[%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tFretchet_Distance: %.4f'
-                  % (epoch+1, num_epochs,
-                      errD.item(), errG.item(),fretchet_dist))
+        print('[%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tFretchet_Distance: %.4f'
+                      % (epoch+1, num_epochs,
+                          errD.item(), errG.item(),fretchet_dist))
 
 if __name__ == '__main__':
     main()
