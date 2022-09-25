@@ -133,8 +133,9 @@ def main():
             ## Train with all-real batch
             netD.zero_grad()
             # Format batch
-            real_cpu = data[0].to(device)
+            real_cpu = data[0].type(args.type)
             b_size = real_cpu.size(0)
+            print('CUDA TU{PE}:', args.type)
             label = torch.full((b_size,), real_label, device=device)
     #         # add some noise to the input to discriminator
 
