@@ -67,8 +67,8 @@ ngf = 64
 ndf = 64
 num_epochs = 70
 # different Learning rate for optimizers
-g_lr = 0.001
-d_lr = 0.004
+g_lr = 0.0001
+d_lr = 0.0004
 # Beta1 hyperparam for Adam optimizers
 beta1 = 0.5
 ngpu=1
