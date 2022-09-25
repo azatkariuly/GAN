@@ -91,21 +91,9 @@ device = torch.device("cuda:0" if (torch.cuda.is_available() and ngpu > 0) else 
 my_model = my_models.__dict__[args.model]
 model_config = {'dataset': args.dataset}
 
-# custom weights initialization called on netG and netD
-def weights_init(m):
-    classname = m.__class__.__name__
-    if classname.find('Conv') != -1:
-        nn.init.normal_(m.weight.data, 0.0, 0.02)
-    elif classname.find('BatchNorm') != -1:
-        nn.init.normal_(m.weight.data, 1.0, 0.02)
-        nn.init.constant_(m.bias.data, 0)
-
 netG, netD = my_model(**model_config)
 
 netG, netD = netG.to(device), netD.to(device)
-netG.apply(weights_init)
-netD.apply(weights_init)
-
 print(netG, netD)
 
 # Initialize BCELoss function
