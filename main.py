@@ -103,7 +103,9 @@ def main():
     logging.info("created model with configuration: %s", model_config)
 
     # Data loading code
-    default_transform = get_transform(args.dataset)
+    transform = get_transform(args.dataset)
+    print(transform)
+    return
     dataset = get_dataset(args.dataset, default_transform)
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size,
                                              shuffle=True, num_workers=2)
