@@ -1,6 +1,6 @@
 from __future__ import print_function
 import argparse
-import os
+import os, sys
 import random
 import torch
 import torch.nn as nn
@@ -31,6 +31,9 @@ import os
 # print(os.listdir("../input"))
 
 import time
+
+#progress bar
+sys.path.append(os.path.join(os.path.dirname(__file__), "progress"))
 from progress.bar import Bar as Bar
 
 model_names = sorted(name for name in my_models.__dict__
