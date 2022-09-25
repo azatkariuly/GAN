@@ -117,7 +117,7 @@ def main():
     dataset = dset.CIFAR10(root='../data2', train=True,
                                         download=True, transform=transform)
 
-    dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size,
+    dataloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size,
                                           shuffle=True, num_workers=2)
 
     for i, data in enumerate(dataloader, 0):
