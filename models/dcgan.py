@@ -17,7 +17,7 @@ class dcgan(nn.Module):
             nn.ReLU(True),
             # state size. (ngf*4) x 8 x 8
             nn.ConvTranspose2d( gen_feature * 4, gen_feature * 2, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(ngf * 2),
+            nn.BatchNorm2d(gen_feature * 2),
             nn.ReLU(True),
             # state size. (ngf*2) x 16 x 16
             nn.ConvTranspose2d( gen_feature * 2, gen_feature, 4, 2, 1, bias=False),

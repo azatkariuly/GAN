@@ -37,11 +37,6 @@ model_names = sorted(name for name in models.__dict__
                      if name.islower() and not name.startswith("__")
                      and callable(models.__dict__[name]))
 
-for name in models.__dict__:
-    print(name)
-
-print(model_names)
-
 parser = argparse.ArgumentParser(description='PyTorch GAN Training')
 
 parser.add_argument('--results_dir', metavar='RESULTS_DIR', default='./results',
