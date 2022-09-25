@@ -60,6 +60,7 @@ class Discriminator(nn.Module):
 
 def dcgan(**kwargs):
     dataset = map(kwargs.get, ['dataset'])
-
+    print('alksdgflaskmdg')
     if dataset == 'cifar10':
+        print('sdjngioansdfoimasd')
         return Generator(), Discriminator()
