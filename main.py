@@ -14,7 +14,8 @@ import torchvision.transforms as transforms
 import torchvision.utils as vutils
 import torch.nn.functional as F
 import numpy as np
-import torchvision.models as models
+import models
+# import torchvision.models as models
 
 # @azatkariuly
 from preprocess import get_transform
