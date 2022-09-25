@@ -186,9 +186,9 @@ def main():
             optimizerG.step()
             if i%100 == 0:
                 print('[%d/%d]\t iteration %d/%d'
-                              % (epoch+1, num_epochs, i, len(dataloader)))
+                              % (epoch+1, args.epochs, i, len(dataloader)))
             # Check how the generator is doing by saving G's output on fixed_noise
-            if (iters % 500 == 0) or ((epoch == num_epochs-1) and (i == len(dataloader)-1)):
+            if (iters % 500 == 0) or ((epoch == args.epochs-1) and (i == len(dataloader)-1)):
                 with torch.no_grad():
                     fixed_noise = torch.randn(ngf, nz, 1, 1, device=device)
                     fake_display = netG(fixed_noise).detach().cpu()
@@ -203,7 +203,7 @@ def main():
         # if ((epoch+1)%5==0):
 
         print('[%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tFretchet_Distance: %.4f'
-                      % (epoch+1, num_epochs,
+                      % (epoch+1, args.epochs,
                           errD.item(), errG.item(),fretchet_dist))
 
 if __name__ == '__main__':
