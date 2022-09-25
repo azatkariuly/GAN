@@ -372,7 +372,7 @@ for epoch in range(num_epochs):
         # Update G
         optimizerG.step()
 
-        bar.suffix = '({batch}/{size}) Data: {data:.3f}'.format(batch=i+1, size=len(dataloader))
+        bar.suffix = '({batch}/{size})'.format(batch=i+1, size=len(dataloader))
         bar.next()
         # Check how the generator is doing by saving G's output on fixed_noise
         if (iters % 500 == 0) or ((epoch == num_epochs-1) and (i == len(dataloader)-1)):
