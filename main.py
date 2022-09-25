@@ -15,6 +15,7 @@ import torchvision.utils as vutils
 import torch.nn.functional as F
 import numpy as np
 import models
+from utils import calculate_fretchet, weights_init, InceptionV3
 # import torchvision.models as models
 
 # @azatkariuly
@@ -124,6 +125,12 @@ def main():
     optimizerD = optim.Adam(netD.parameters(), lr=args.dis_lr, betas=(0.5, 0.999))
     optimizerG = optim.Adam(netD.parameters(), lr=args.gen_lr, betas=(0.5, 0.999))
 
+    block_idx = InceptionV3.BLOCK_INDEX_BY_DIM[2048]
+    temp_model = InceptionV3([block_idx])
+    print(temp_model)
+    return
+    temp_model = temp_model.cuda()
+
     img_list = []
     G_losses = []
     D_losses = []
@@ -199,7 +206,7 @@ def main():
             iters += 1
         G_losses.append(errG.item())
         D_losses.append(errD.item())
-        fretchet_dist=0 #calculate_fretchet(real_cpu,fake,model)
+        fretchet_dist = calculate_fretchet(real_cpu,fake, temp_model)
         # if ((epoch+1)%5==0):
 
         print('[%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tFretchet_Distance: %.4f'
