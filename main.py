@@ -107,8 +107,11 @@ def main():
     dataset = get_dataset(args.dataset, transform)
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=args.batch_size,
                                              shuffle=True, num_workers=2)
-    print(dataloader)
-    return
+
+    for i, data in enumerate(dataloader, 0):
+        print('hbeajk')
+        print(i, data)
+        return
 
     # Initialize BCELoss function
     criterion = nn.BCELoss()
