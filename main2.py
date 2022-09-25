@@ -40,6 +40,11 @@ parser = argparse.ArgumentParser(description='PyTorch GAN Training')
 
 parser.add_argument('--dataset', metavar='DATASET', default='cifar10',
                     help='dataset name or folder')
+parser.add_argument('--model', '-a', metavar='MODEL', default='dcgan',
+                    choices=model_names,
+                    help='model architecture: ' +
+                    ' | '.join(model_names) +
+                    ' (default: dcgan)')
 
 SEED=42
 random.seed(SEED)
