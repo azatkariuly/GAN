@@ -74,13 +74,6 @@ nz = 100
 ngf = 64
 # Spatial size of training images. All images will be resized to this size using a transformer.
 image_size = 64
-# Number of training epochs
-num_epochs = 70
-# different Learning rate for optimizers
-g_lr = 0.0001
-d_lr = 0.0004
-# Beta1 hyperparam for Adam optimizers
-beta1 = 0.5
 ngpu=1
 
 def main():
@@ -107,6 +100,7 @@ def main():
     netG, netD = netG.to(device), netD.to(device)
     netG.apply(weights_init)
     netD.apply(weights_init)
+
     logging.info("created model with configuration: %s", model_config)
 
     # Data loading code
