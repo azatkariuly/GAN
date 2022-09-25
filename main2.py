@@ -61,7 +61,6 @@ nz = 100
 ngf = 64
 # Size of feature maps in discriminator
 ndf = 64
-# Number of training epochs
 num_epochs = 70
 # different Learning rate for optimizers
 g_lr = 0.0001
@@ -87,7 +86,6 @@ dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size,
 
 # Decide which device we want to run on
 device = torch.device("cuda:0" if (torch.cuda.is_available() and ngpu > 0) else "cpu")
-
 
 # create model
 my_model = my_models.__dict__[args.model]
