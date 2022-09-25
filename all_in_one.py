@@ -422,7 +422,7 @@ for epoch in range(num_epochs):
         optimizerG.step()
         if i%100 == 0:
             print('[%d/%d]\t iteration %d/%d'
-                          % (epoch+1, args.epochs, i, len(dataloader)))
+                          % (epoch+1, num_epochs, i, len(dataloader)))
         # Check how the generator is doing by saving G's output on fixed_noise
         if (iters % 500 == 0) or ((epoch == num_epochs-1) and (i == len(dataloader)-1)):
             with torch.no_grad():
