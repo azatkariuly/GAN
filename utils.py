@@ -1,5 +1,6 @@
 import numpy as np
 import torch.nn as nn
+import torchvision.models as models
 
 def weights_init(m):
     classname = m.__class__.__name__

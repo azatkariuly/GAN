@@ -16,7 +16,6 @@ import torch.nn.functional as F
 import numpy as np
 import models
 from utils import calculate_fretchet, weights_init, InceptionV3
-# import torchvision.models as models
 
 # @azatkariuly
 from preprocess import get_transform
