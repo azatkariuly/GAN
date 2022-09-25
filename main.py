@@ -71,6 +71,7 @@ SEED=42
 random.seed(SEED)
 torch.manual_seed(SEED)
 nz = 100
+ngf = 64
 # Spatial size of training images. All images will be resized to this size using a transformer.
 image_size = 64
 # Number of training epochs
