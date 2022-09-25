@@ -36,6 +36,9 @@ model_names = sorted(name for name in models.__dict__
                      if name.islower() and not name.startswith("__")
                      and callable(models.__dict__[name]))
 
+for name in models.__dict__:
+    print(name)
+
 print(model_names)
 
 parser = argparse.ArgumentParser(description='PyTorch GAN Training')
@@ -116,7 +119,7 @@ def main():
     # create model
     logging.info("creating model %s", args.model)
     model = models.__dict__[args.model]
-    model_config = {'input_size': args.input_size, 'dataset': args.dataset}
+    model_config = {'dataset': args.dataset}
 
     model = model(**model_config)
     logging.info("created model with configuration: %s", model_config)
