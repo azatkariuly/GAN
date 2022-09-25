@@ -65,6 +65,8 @@ d_lr = 0.0004
 beta1 = 0.5
 ngpu=1
 
+args = parser.parse_args()
+
 #normalizing input between -1 and 1
 transform=transforms.Compose([
                                transforms.Resize(image_size),
