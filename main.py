@@ -120,7 +120,7 @@ def main():
     # create model
     logging.info("creating model %s", args.model)
     model = models.__dict__[args.model]
-    model_config = {'dataset': args.dataset}
+    model_config = {} # {'dataset': args.dataset}
 
     model = model(**model_config)
     logging.info("created model with configuration: %s", model_config)
