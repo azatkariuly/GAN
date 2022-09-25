@@ -126,8 +126,6 @@ def main():
 
     block_idx = InceptionV3.BLOCK_INDEX_BY_DIM[2048]
     temp_model = InceptionV3([block_idx])
-    print(temp_model)
-    return
     temp_model = temp_model.cuda()
 
     img_list = []
