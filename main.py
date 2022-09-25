@@ -103,8 +103,8 @@ def main():
     model_config = {'dataset': args.dataset}
 
     netG, netD = model(**model_config)
-    # netG.apply(weights_init)
-    # netD.apply(weights_init)
+    netG.apply(weights_init)
+    netD.apply(weights_init)
 
     netG, netD = netG.to(device), netD.to(device)
     logging.info("created model with configuration: %s", model_config)
