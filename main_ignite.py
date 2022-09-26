@@ -26,6 +26,64 @@ ignite.utils.setup_logger(name="ignite.distributed.launcher.Parallel", level=log
 
 # Dataset and Transformation
 
+print('Start downloading..')
+
+def get_dataloaders_celeba(batch_size, num_workers=0,
+                           train_transforms=None,
+                           test_transforms=None,
+                           download=True):
+
+    if train_transforms is None:
+        train_transforms = transforms.ToTensor()
+
+    if test_transforms is None:
+        test_transforms = transforms.ToTensor()
+
+    train_dataset = datasets.CelebA(root='data',
+                                    split='train',
+                                    transform=train_transforms,
+                                    download=download)
+
+    valid_dataset = datasets.CelebA(root='data',
+                                    split='valid',
+                                    transform=test_transforms)
+
+    test_dataset = datasets.CelebA(root='data',
+                                   split='test',
+                                   transform=test_transforms)
+
+
+    train_loader = DataLoader(dataset=train_dataset,
+                              batch_size=batch_size,
+                              num_workers=num_workers,
+                              shuffle=True)
+
+    valid_loader = DataLoader(dataset=test_dataset,
+                             batch_size=batch_size,
+                             num_workers=num_workers,
+                             shuffle=False)
+
+    test_loader = DataLoader(dataset=test_dataset,
+                             batch_size=batch_size,
+                             num_workers=num_workers,
+                             shuffle=False)
+
+    return train_loader, valid_loader, test_loader
+
+custom_transforms = torchvision.transforms.Compose([
+    torchvision.transforms.CenterCrop((160, 160)),
+    torchvision.transforms.Resize([IMAGE_HEIGHT, IMAGE_WIDTH]),
+    torchvision.transforms.ToTensor(),
+    torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+])
+
+train_loader, valid_loader, test_loader = get_dataloaders_celeba(
+    batch_size=BATCH_SIZE,
+    train_transforms=custom_transforms,
+    test_transforms=custom_transforms,
+    num_workers=4)
+
+'''
 image_size = 64
 
 data_transform = transforms.Compose(
@@ -36,7 +94,7 @@ data_transform = transforms.Compose(
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
     ]
 )
-'''
+
 train_dataset = ImageFolder(root="../data", transform=data_transform)
 test_dataset = torch.utils.data.Subset(train_dataset, torch.arange(3000))
 
@@ -59,7 +117,6 @@ test_dataloader = idist.auto_dataloader(
     shuffle=False,
     drop_last=True,
 )
-'''
 
 # Generator
 
@@ -100,3 +157,4 @@ netG = idist.auto_model(Generator3x64x64(latent_dim))
 idist.device()
 
 summary(netG, (latent_dim, 1, 1))
+'''
