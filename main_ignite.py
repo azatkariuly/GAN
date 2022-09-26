@@ -72,7 +72,7 @@ def get_dataloaders_celeba(batch_size, num_workers=0,
 
 custom_transforms = torchvision.transforms.Compose([
     torchvision.transforms.CenterCrop((160, 160)),
-    torchvision.transforms.Resize([IMAGE_HEIGHT, IMAGE_WIDTH]),
+    torchvision.transforms.Resize([64, 64]),
     torchvision.transforms.ToTensor(),
     torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
