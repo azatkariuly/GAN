@@ -1,9 +1,3 @@
-import torch
-import torchvision
-import ignite
-
-print(*map(lambda m: ": ".join((m.__name__, m.__version__)), (torch, torchvision, ignite)), sep="\n")
-
 import os
 import logging
 import matplotlib.pyplot as plt
