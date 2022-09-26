@@ -40,16 +40,16 @@ def get_dataloaders_celeba(batch_size, num_workers=0,
     if test_transforms is None:
         test_transforms = transforms.ToTensor()
 
-    train_dataset = datasets.CelebA(root='data',
+    train_dataset = datasets.CelebA(root='../data',
                                     split='train',
                                     transform=train_transforms,
                                     download=download)
 
-    valid_dataset = datasets.CelebA(root='data',
+    valid_dataset = datasets.CelebA(root='../data',
                                     split='valid',
                                     transform=test_transforms)
 
-    test_dataset = datasets.CelebA(root='data',
+    test_dataset = datasets.CelebA(root='../data',
                                    split='test',
                                    transform=test_transforms)
 
