@@ -34,7 +34,7 @@ data_transform = transforms.Compose(
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
     ]
 )
-
+'''
 train_dataset = ImageFolder(root="../data", transform=data_transform)
 test_dataset = torch.utils.data.Subset(train_dataset, torch.arange(3000))
 
@@ -57,6 +57,7 @@ test_dataloader = idist.auto_dataloader(
     shuffle=False,
     drop_last=True,
 )
+'''
 
 # Generator
 
