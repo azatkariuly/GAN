@@ -71,14 +71,14 @@ def get_dataloaders_celeba(batch_size, num_workers=0,
     return train_loader, valid_loader, test_loader
 
 custom_transforms = torchvision.transforms.Compose([
-    torchvision.transforms.CenterCrop((160, 160)),
-    torchvision.transforms.Resize([64, 64]),
+    torchvision.transforms.CenterCrop(64),
+    torchvision.transforms.Resize(64),
     torchvision.transforms.ToTensor(),
     torchvision.transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 
 train_loader, valid_loader, test_loader = get_dataloaders_celeba(
-    batch_size=BATCH_SIZE,
+    batch_size=128,
     train_transforms=custom_transforms,
     test_transforms=custom_transforms,
     num_workers=4)
