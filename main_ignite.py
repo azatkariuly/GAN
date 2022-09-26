@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 
 import numpy as np
 
+import torchvision
+import ignite
 from torchsummary import summary
 
 import torch
