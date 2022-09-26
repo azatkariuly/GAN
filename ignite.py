@@ -41,7 +41,7 @@ data_transform = transforms.Compose(
     ]
 )
 
-train_dataset = ImageFolder(root="./data", transform=data_transform)
+train_dataset = ImageFolder(root="../data", transform=data_transform)
 test_dataset = torch.utils.data.Subset(train_dataset, torch.arange(3000))
 
 # DataLoading
