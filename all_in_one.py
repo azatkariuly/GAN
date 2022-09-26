@@ -56,11 +56,10 @@ beta1 = 0.5
 ngpu=1
 
 #normalizing input between -1 and 1
-transform=transforms.Compose([
-                               transforms.Resize(image_size),
-                               transforms.CenterCrop(image_size),
-                               transforms.ToTensor(),
-                               transforms.Normalize((0,0,0), (1,1,1)),])
+transform=transforms.Compose([transforms.Resize(image_size),
+                              transforms.CenterCrop(image_size),
+                              transforms.ToTensor(),
+                              transforms.Normalize((0,0,0), (1,1,1)),])
 
 
 dataset = dset.CIFAR10(root='../data/CIFAR10', train=True,
