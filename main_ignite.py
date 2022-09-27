@@ -431,7 +431,7 @@ def log_training_results(engine):
     metrics = evaluator.state.metrics
     fid_score = metrics['fid']
     is_score = metrics['is']
-    pytorch_fid_score = metric['pytorch_fid']
+    pytorch_fid_score = metrics['pytorch_fid']
     fid_values.append(fid_score)
     is_values.append(is_score)
     pytorch_fid.append(pytorch_fid_score)
