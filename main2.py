@@ -81,7 +81,7 @@ if __name__ == '__main__':
     import torchvision.datasets as dset
     import torchvision.transforms as transforms
 
-    cifar = dset.CIFAR10(root='data/', download=True,
+    cifar = dset.CIFAR10(root='../data/', download=True,
                              transform=transforms.Compose([
                                  transforms.Scale(32),
                                  transforms.ToTensor(),
