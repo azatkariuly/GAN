@@ -118,40 +118,41 @@ idist.device()
 
 summary(netG, (latent_dim, 1, 1))
 
-'''
+
 # Discriminator
 
-class Discriminator3x64x64(nn.Module):
-    def __init__(self):
-        super(Discriminator3x64x64, self).__init__()
-        self.model = nn.Sequential(
-            # input is 3 x 64 x 64
+class Discriminator(nn.Module):
+    def __init__(self, ngpu):
+        super(Discriminator, self).__init__()
+        self.ngpu = ngpu
+        self.main = nn.Sequential(
+            # input is (nc) x 64 x 64
             nn.Conv2d(3, 64, 4, 2, 1, bias=False),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size. 64 x 32 x 32
-            nn.Conv2d(64, 128, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(128),
+            # state size. (ndf) x 32 x 32
+            nn.Conv2d(64, 64 * 2, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(64 * 2),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size. 128 x 16 x 16
-            nn.Conv2d(128, 256, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(256),
+            # state size. (ndf*2) x 16 x 16
+            nn.Conv2d(64 * 2, 64 * 4, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(64 * 4),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size. 256 x 8 x 8
-            nn.Conv2d(256, 512, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(512),
+            # state size. (ndf*4) x 8 x 8
+            nn.Conv2d(64 * 4, 64 * 8, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(64 * 8),
             nn.LeakyReLU(0.2, inplace=True),
-            # state size. 512 x 4 x 4
-            nn.Conv2d(512, 1, 4, 1, 0, bias=False),
+            # state size. (ndf*8) x 4 x 4
+            nn.Conv2d(64 * 8, 1, 4, 1, 0, bias=False),
             nn.Sigmoid()
         )
 
-    def forward(self, x):
-        x = self.model(x)
-        return x
+    def forward(self, input):
+        return self.main(input)
 
-netD = idist.auto_model(Discriminator3x64x64())
+netD = idist.auto_model(Discriminator())
 summary(netD, (3, 64, 64))
 
+'''
 # Optimizers
 
 criterion = nn.BCELoss()
