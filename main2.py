@@ -68,13 +68,16 @@ train_dataloader = idist.auto_dataloader(
     drop_last=True,
 )
 
-train_dataloader = idist.auto_dataloader(
+train_dataloader1 = idist.auto_dataloader(
     train_loader,
     batch_size=batch_size,
     num_workers=2,
     shuffle=True,
     drop_last=True,
 )
+
+print(train_dataloader)
+print(train_dataloader1)
 
 test_dataloader = idist.auto_dataloader(
     test_dataset,
