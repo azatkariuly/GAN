@@ -30,6 +30,7 @@ from torchvision.datasets import ImageFolder
 # Dataset and Transformation
 
 image_size = 64
+batch_size = 128
 
 #normalizing input between -1 and 1
 transform = transforms.Compose([transforms.Resize(image_size),
