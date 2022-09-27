@@ -31,6 +31,7 @@ from torchvision.datasets import ImageFolder
 
 image_size = 64
 batch_size = 128
+ngpu = 1
 
 #normalizing input between -1 and 1
 transform = transforms.Compose([transforms.Resize(image_size),
