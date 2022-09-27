@@ -14,6 +14,7 @@ import torch.optim as optim
 
 import torchvision.transforms as transforms
 import torchvision.utils as vutils
+import torchvision.models as models
 from torchvision import datasets
 
 from ignite.engine import Engine, Events
