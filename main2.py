@@ -396,7 +396,7 @@ wrapper_model = WrapperInceptionV3(model)
 wrapper_model.eval();
 
 # comparable metric
-pytorch_fid_metric = FID(num_features=dims, feature_extractor=wrapper_model)
+# pytorch_fid_metric = FID(num_features=dims, feature_extractor=wrapper_model)
 
 # Evaluators
 
@@ -422,11 +422,11 @@ def evaluation_step(engine, batch):
 evaluator = Engine(evaluation_step)
 fid_metric.attach(evaluator, "fid")
 is_metric.attach(evaluator, "is")
-pytorch_fid_metric.attach(evaluator, 'pytorch_fid')
+# pytorch_fid_metric.attach(evaluator, 'pytorch_fid')
 
 fid_values = []
 is_values = []
-pytorch_fid = []
+# pytorch_fid = []
 
 
 @trainer.on(Events.EPOCH_COMPLETED)
@@ -435,15 +435,15 @@ def log_training_results(engine):
     metrics = evaluator.state.metrics
     fid_score = metrics['fid']
     is_score = metrics['is']
-    pytorch_fid_score = metrics['pytorch_fid']
+    # pytorch_fid_score = metrics['pytorch_fid']
     fid_values.append(fid_score)
     is_values.append(is_score)
-    pytorch_fid.append(pytorch_fid_score)
+    # pytorch_fid.append(pytorch_fid_score)
 
     print(f"Epoch [{engine.state.epoch}/5] Metric Scores")
     print(f"*   FID : {fid_score:4f}")
     print(f"*    IS : {is_score:4f}")
-    print(f"*  PFID : {pytorch_fid_score:4f}")
+    # print(f"*  PFID : {pytorch_fid_score:4f}")
 
 from ignite.metrics import RunningAverage
 
