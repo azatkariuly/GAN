@@ -82,9 +82,8 @@ test_dataloader = idist.auto_dataloader(
 latent_dim = 100
 
 class Generator(nn.Module):
-    def __init__(self, ngpu):
+    def __init__(self, latent_dim=100):
         super(Generator, self).__init__()
-        self.ngpu = ngpu
         self.main = nn.Sequential(
             # input is Z, going into a convolution
             nn.ConvTranspose2d(latent_dim, 64 * 8, 4, 1, 0, bias=False),
@@ -122,9 +121,8 @@ summary(netG, (latent_dim, 1, 1))
 # Discriminator
 
 class Discriminator(nn.Module):
-    def __init__(self, ngpu):
+    def __init__(self):
         super(Discriminator, self).__init__()
-        self.ngpu = ngpu
         self.main = nn.Sequential(
             # input is (nc) x 64 x 64
             nn.Conv2d(3, 64, 4, 2, 1, bias=False),
