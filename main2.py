@@ -60,10 +60,16 @@ device = torch.device("cuda:0" if (torch.cuda.is_available() and ngpu > 0) else 
 
 # DataLoading
 
-batch_size = 128
-
 train_dataloader = idist.auto_dataloader(
     train_dataset,
+    batch_size=batch_size,
+    num_workers=2,
+    shuffle=True,
+    drop_last=True,
+)
+
+train_dataloader = idist.auto_dataloader(
+    train_loader,
     batch_size=batch_size,
     num_workers=2,
     shuffle=True,
