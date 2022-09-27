@@ -45,10 +45,10 @@ train_dataset = datasets.CIFAR10(root='../data/CIFAR10', train=True,
 test_dataset = datasets.CIFAR10(root='../data/CIFAR10', train=False,
                                         download=True, transform=transform)
 
-train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size,
-                                          shuffle=True, num_workers=2)
-test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size,
-                                          shuffle=False, num_workers=2)
+# train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size,
+#                                           shuffle=True, num_workers=2)
+# test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size,
+#                                           shuffle=False, num_workers=2)
 
 # Decide which device we want to run on
 device = torch.device("cuda:0" if (torch.cuda.is_available() and ngpu > 0) else "cpu")
@@ -68,17 +68,6 @@ train_dataloader = idist.auto_dataloader(
     drop_last=True,
 )
 
-train_dataloader1 = idist.auto_dataloader(
-    train_loader,
-    batch_size=batch_size,
-    num_workers=2,
-    shuffle=True,
-    drop_last=True,
-)
-
-print(train_dataloader)
-print(train_dataloader1)
-
 test_dataloader = idist.auto_dataloader(
     test_dataset,
     batch_size=batch_size,
@@ -87,47 +76,49 @@ test_dataloader = idist.auto_dataloader(
     drop_last=True,
 )
 
-'''
+
 # Generator
 
 latent_dim = 100
 
-class Generator3x64x64(nn.Module):
-    def __init__(self, latent_dim):
-        super(Generator3x64x64, self).__init__()
-        self.model = nn.Sequential(
-            nn.ConvTranspose2d(latent_dim, 512, 4, 1, 0, bias=False),
-            nn.BatchNorm2d(512),
+class Generator(nn.Module):
+    def __init__(self, ngpu):
+        super(Generator, self).__init__()
+        self.ngpu = ngpu
+        self.main = nn.Sequential(
+            # input is Z, going into a convolution
+            nn.ConvTranspose2d(latent_dim, 64 * 8, 4, 1, 0, bias=False),
+            nn.BatchNorm2d(64 * 8),
             nn.ReLU(True),
-            # state size. 512 x 4 x 4
-            nn.ConvTranspose2d(512, 256, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(256),
+            # state size. (ngf*8) x 4 x 4
+            nn.ConvTranspose2d(64 * 8, 64 * 4, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(64 * 4),
             nn.ReLU(True),
-            # state size. 256 x 8 x 8
-            nn.ConvTranspose2d(256, 128, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(128),
+            # state size. (ngf*4) x 8 x 8
+            nn.ConvTranspose2d( 64 * 4, 64 * 2, 4, 2, 1, bias=False),
+            nn.BatchNorm2d(64 * 2),
             nn.ReLU(True),
-            # state size. 128 x 16 x 16
-            nn.ConvTranspose2d(128, 64, 4, 2, 1, bias=False),
+            # state size. (ngf*2) x 16 x 16
+            nn.ConvTranspose2d( 64 * 2, 64, 4, 2, 1, bias=False),
             nn.BatchNorm2d(64),
             nn.ReLU(True),
-            # state size. 64 x 32 x 32
-            nn.ConvTranspose2d(64, 3, 4, 2, 1, bias=False),
+            # state size. (ngf) x 32 x 32
+            nn.ConvTranspose2d( 64, 3, 4, 2, 1, bias=False),
             nn.Tanh()
-            # final state size. 3 x 64 x 64
+            # state size. (nc) x 64 x 64
         )
 
-    def forward(self, x):
-        x = self.model(x)
-        return x
+    def forward(self, input):
+        return self.main(input)
 
-netG = idist.auto_model(Generator3x64x64(latent_dim))
+netG = idist.auto_model(Generator(latent_dim))
 
 # Note that the model is automatically moved to the best device detected by idist.
 idist.device()
 
 summary(netG, (latent_dim, 1, 1))
 
+'''
 # Discriminator
 
 class Discriminator3x64x64(nn.Module):
