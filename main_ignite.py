@@ -417,7 +417,7 @@ def evaluation_step(engine, batch):
 evaluator = Engine(evaluation_step)
 fid_metric.attach(evaluator, "fid")
 is_metric.attach(evaluator, "is")
-pytorch_fid.attach(evaluator, 'pytorch_fid')
+pytorch_fid_metric.attach(evaluator, 'pytorch_fid')
 
 fid_values = []
 is_values = []
