@@ -68,13 +68,13 @@ train_dataloader = idist.auto_dataloader(
     drop_last=True,
 )
 
-test_dataloader = idist.auto_dataloader(
-    test_dataset,
-    batch_size=batch_size,
-    num_workers=2,
-    shuffle=False,
-    drop_last=True,
-)
+# test_dataloader = idist.auto_dataloader(
+#     test_dataset,
+#     batch_size=batch_size,
+#     num_workers=2,
+#     shuffle=False,
+#     drop_last=True,
+# )
 
 
 # Generator
@@ -422,28 +422,28 @@ def evaluation_step(engine, batch):
 evaluator = Engine(evaluation_step)
 fid_metric.attach(evaluator, "fid")
 is_metric.attach(evaluator, "is")
-# pytorch_fid_metric.attach(evaluator, 'pytorch_fid')
+pytorch_fid_metric.attach(evaluator, 'pytorch_fid')
 
 fid_values = []
 is_values = []
-# pytorch_fid = []
+pytorch_fid = []
 
 
 @trainer.on(Events.EPOCH_COMPLETED)
 def log_training_results(engine):
-    evaluator.run(test_dataloader,max_epochs=1)
+    evaluator.run(train_dataloader,max_epochs=1)
     metrics = evaluator.state.metrics
     fid_score = metrics['fid']
     is_score = metrics['is']
-    # pytorch_fid_score = metrics['pytorch_fid']
+    pytorch_fid_score = metrics['pytorch_fid']
     fid_values.append(fid_score)
     is_values.append(is_score)
-    # pytorch_fid.append(pytorch_fid_score)
+    pytorch_fid.append(pytorch_fid_score)
 
     print(f"Epoch [{engine.state.epoch}/5] Metric Scores")
     print(f"*   FID : {fid_score:4f}")
     print(f"*    IS : {is_score:4f}")
-    # print(f"*  PFID : {pytorch_fid_score:4f}")
+    print(f"*  PFID : {pytorch_fid_score:4f}")
 
 from ignite.metrics import RunningAverage
 
