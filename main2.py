@@ -150,7 +150,7 @@ class Discriminator(nn.Module):
 netD = idist.auto_model(Discriminator())
 summary(netD, (3, 64, 64))
 
-'''
+
 # Optimizers
 
 criterion = nn.BCELoss()
@@ -464,4 +464,3 @@ def training(*args):
 
 with idist.Parallel(backend='nccl') as parallel:
     parallel.run(training)
-'''
