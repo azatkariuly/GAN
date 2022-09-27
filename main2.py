@@ -38,9 +38,9 @@ transform = transforms.Compose([transforms.Resize(image_size),
                               transforms.Normalize((0,0,0), (1,1,1)),])
 
 
-train_dataset = dset.CIFAR10(root='../data/CIFAR10', train=True,
+train_dataset = datasets.CIFAR10(root='../data/CIFAR10', train=True,
                                         download=True, transform=transform)
-test_dataset = dset.CIFAR10(root='../data/CIFAR10', train=False,
+test_dataset = datasets.CIFAR10(root='../data/CIFAR10', train=False,
                                         download=True, transform=transform)
 
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size,
