@@ -444,7 +444,7 @@ for epoch in range(num_epochs):
                          errD.item(), errG.item(),fretchet_dist, best_res))
 
 plt.figure(figsize=(10,5))
-plt.title("Generator and Discriminator Loss During Training (fp32)")
+plt.title("Generator and Discriminator Loss During Training (Discriminator is 2-bit)")
 plt.plot(G_losses,label="G")
 plt.plot(D_losses,label="D")
 plt.xlabel("iterations")
