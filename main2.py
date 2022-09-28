@@ -29,7 +29,7 @@ ignite.utils.setup_logger(name="ignite.distributed.launcher.Parallel", level=log
 
 # Dataset and Transformation
 
-image_size = 64
+image_size = 32
 batch_size = 128
 ngpu = 1
 
