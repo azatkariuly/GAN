@@ -36,7 +36,7 @@ def quantizeLSQ(v, s, p, isActivation=False):
 class TransposeConv2dLSQ(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size, stride=1,
                  padding=0, dilation=1, groups=1, bias=True, **kwargs_q):
-        super(TransposeConvLSQ, self).__init__()
+        super(TransposeConv2dLSQ, self).__init__()
 
         self.nbits = kwargs_q['nbits']
         self.step_size = Parameter(torch.Tensor(1))
