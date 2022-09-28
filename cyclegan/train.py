@@ -93,6 +93,8 @@ def train_fn(disc_H, disc_Z, gen_Z, gen_H, loader, opt_disc, opt_gen, l1, mse, d
 
 
 def main():
+    best_FID = float('inf')
+
     disc_H = Discriminator(in_channels=3).to(config.DEVICE)
     disc_Z = Discriminator(in_channels=3).to(config.DEVICE)
     gen_Z = Generator(img_channels=3, num_residuals=9).to(config.DEVICE)
@@ -155,15 +157,16 @@ def main():
     for epoch in range(config.NUM_EPOCHS):
         e_horse, e_fake_horse = train_fn(disc_H, disc_Z, gen_Z, gen_H, loader, opt_disc, opt_gen, L1, mse, d_scaler, g_scaler)
 
-        if config.SAVE_MODEL:
+        fretchet_dist = calculate_fretchet(e_horse, e_fake_horse, temp_model)
+
+        if config.SAVE_MODEL and best_FID>fretchet_dist:
+            best_FID = fretchet_dist
             save_checkpoint(gen_H, opt_gen, filename=config.CHECKPOINT_GEN_H)
             save_checkpoint(gen_Z, opt_gen, filename=config.CHECKPOINT_GEN_Z)
             save_checkpoint(disc_H, opt_disc, filename=config.CHECKPOINT_CRITIC_H)
             save_checkpoint(disc_Z, opt_disc, filename=config.CHECKPOINT_CRITIC_Z)
 
-
-        fretchet_dist = calculate_fretchet(e_horse, e_fake_horse, temp_model)
-        print('FID:', fretchet_dist)
+        print('Best FID:', best_FID)
 
 if __name__ == "__main__":
     main()
