@@ -84,15 +84,15 @@ class Generator(nn.Module):
             nn.BatchNorm2d(ngf * 8),
             nn.ReLU(True),
             # state size. (ngf*8) x 4 x 4
-            TransposeConv2dLSQ(ngf * 8, ngf * 4, 4, 2, 1, bias=False, nbits=nbits),
+            nn.ConvTranspose2d(ngf * 8, ngf * 4, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ngf * 4),
             nn.ReLU(True),
             # state size. (ngf*4) x 8 x 8
-            TransposeConv2dLSQ( ngf * 4, ngf * 2, 4, 2, 1, bias=False, nbits=nbits),
+            nn.ConvTranspose2d( ngf * 4, ngf * 2, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ngf * 2),
             nn.ReLU(True),
             # state size. (ngf*2) x 16 x 16
-            TransposeConv2dLSQ( ngf * 2, ngf, 4, 2, 1, bias=False, nbits=nbits),
+            nn.ConvTranspose2d( ngf * 2, ngf, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ngf),
             nn.ReLU(True),
             # state size. (ngf) x 32 x 32
@@ -127,15 +127,15 @@ class Discriminator(nn.Module):
             nn.Conv2d(nc, ndf, 4, 2, 1, bias=False),
             nn.LeakyReLU(0.2, inplace=True),
             # state size. (ndf) x 32 x 32
-            nn.Conv2d(ndf, ndf * 2, 4, 2, 1, bias=False),
+            Conv2dLSQ(ndf, ndf * 2, 4, 2, 1, bias=False, nbits=nbits),
             nn.BatchNorm2d(ndf * 2),
             nn.LeakyReLU(0.2, inplace=True),
             # state size. (ndf*2) x 16 x 16
-            nn.Conv2d(ndf * 2, ndf * 4, 4, 2, 1, bias=False),
+            Conv2dLSQ(ndf * 2, ndf * 4, 4, 2, 1, bias=False, nbits=nbits),
             nn.BatchNorm2d(ndf * 4),
             nn.LeakyReLU(0.2, inplace=True),
             # state size. (ndf*4) x 8 x 8
-            nn.Conv2d(ndf * 4, ndf * 8, 4, 2, 1, bias=False),
+            Conv2dLSQ(ndf * 4, ndf * 8, 4, 2, 1, bias=False, nbits=nbits),
             nn.BatchNorm2d(ndf * 8),
             nn.LeakyReLU(0.2, inplace=True),
             # state size. (ndf*8) x 4 x 4
@@ -417,7 +417,7 @@ for epoch in range(num_epochs):
         # Since we just updated D, perform another forward pass of all-fake batch through D
         output = netD(fake).view(-1)
         # Calculate G's loss based on this output
-        errG = criterion(nn.Sigmoid(output), label)
+        errG = criterion(output, label)
         D_G_z2 = output.mean().item()
 
         # Calculate gradients for G
