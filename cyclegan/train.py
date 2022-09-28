@@ -109,19 +109,19 @@ def main():
     L1 = nn.L1Loss()
     mse = nn.MSELoss()
 
-    if config.LOAD_MODEL:
-        load_checkpoint(
-            config.CHECKPOINT_GEN_H, gen_H, opt_gen, config.LEARNING_RATE,
-        )
-        load_checkpoint(
-            config.CHECKPOINT_GEN_Z, gen_Z, opt_gen, config.LEARNING_RATE,
-        )
-        load_checkpoint(
-            config.CHECKPOINT_CRITIC_H, disc_H, opt_disc, config.LEARNING_RATE,
-        )
-        load_checkpoint(
-            config.CHECKPOINT_CRITIC_Z, disc_Z, opt_disc, config.LEARNING_RATE,
-        )
+    # if config.LOAD_MODEL:
+    #     load_checkpoint(
+    #         config.CHECKPOINT_GEN_H, gen_H, opt_gen, config.LEARNING_RATE,
+    #     )
+    #     load_checkpoint(
+    #         config.CHECKPOINT_GEN_Z, gen_Z, opt_gen, config.LEARNING_RATE,
+    #     )
+    #     load_checkpoint(
+    #         config.CHECKPOINT_CRITIC_H, disc_H, opt_disc, config.LEARNING_RATE,
+    #     )
+    #     load_checkpoint(
+    #         config.CHECKPOINT_CRITIC_Z, disc_Z, opt_disc, config.LEARNING_RATE,
+    #     )
 
     dataset = HorseZebraDataset(
         root_horse=config.TRAIN_DIR+"/horses", root_zebra=config.TRAIN_DIR+"/zebras", transform=config.transforms
