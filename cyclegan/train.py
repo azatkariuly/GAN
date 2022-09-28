@@ -12,20 +12,6 @@ from discriminator_model import Discriminator
 from generator_model import Generator
 from utils import calculate_fretchet, InceptionV3
 
-# wrapper class as feature_extractor
-class WrapperInceptionV3(nn.Module):
-
-    def __init__(self, fid_incv3):
-        super().__init__()
-        self.fid_incv3 = fid_incv3
-
-    @torch.no_grad()
-    def forward(self, x):
-        y = self.fid_incv3(x)
-        y = y[0]
-        y = y[:, :, 0, 0]
-        return y
-
 def train_fn(disc_H, disc_Z, gen_Z, gen_H, loader, opt_disc, opt_gen, l1, mse, d_scaler, g_scaler):
     H_reals = 0
     H_fakes = 0
@@ -38,7 +24,6 @@ def train_fn(disc_H, disc_Z, gen_Z, gen_H, loader, opt_disc, opt_gen, l1, mse, d
         # Train Discriminators H and Z
         with torch.cuda.amp.autocast():
             fake_horse = gen_H(zebra)
-            break
             D_H_real = disc_H(horse)
             D_H_fake = disc_H(fake_horse.detach())
             H_reals += D_H_real.mean().item()
@@ -168,14 +153,10 @@ def main():
     block_idx = InceptionV3.BLOCK_INDEX_BY_DIM[2048]
     temp_model = InceptionV3([block_idx]).cuda()
 
-    # wrapper model to pytorch_fid model
-    wrapper_model = WrapperInceptionV3(temp_model)
-    wrapper_model.eval();
-
     for epoch in range(config.NUM_EPOCHS):
         e_horse, e_fake_horse = train_fn(disc_H, disc_Z, gen_Z, gen_H, loader, opt_disc, opt_gen, L1, mse, d_scaler, g_scaler)
 
-        fretchet_dist = calculate_fretchet(e_horse, e_fake_horse, wrapper_model)
+        fretchet_dist = calculate_fretchet(e_horse, e_fake_horse, temp_model)
         print('Epoch:', epoch+1, '; FID:', fretchet_dist)
 
         if config.SAVE_MODEL and best_FID>fretchet_dist:
