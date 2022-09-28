@@ -47,7 +47,7 @@ ngf = 64
 # Size of feature maps in discriminator
 ndf = 64
 # Number of training epochs
-num_epochs = 3
+num_epochs = 100
 # different Learning rate for optimizers
 g_lr = 0.0001
 d_lr = 0.0004
