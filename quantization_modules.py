@@ -66,7 +66,7 @@ class Conv2dLSQ(nn.Conv2d):
 
     def __init__(self, in_channels, out_channels, kernel_size, stride=1,
                  padding=0, dilation=1, groups=1, bias=True, **kwargs):
-        super(BinarizeConv2d, self).__init__(in_channels, out_channels, kernel_size, stride=stride,
+        super(Conv2dLSQ, self).__init__(in_channels, out_channels, kernel_size, stride=stride,
                                         padding=padding, dilation=dilation, groups=groups, bias=bias)
 
         self.nbits = kwargs_q['nbits']
