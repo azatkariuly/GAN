@@ -115,7 +115,7 @@ def weights_init(m):
 
 # Create the generator
 netG = Generator(ngpu).to(device)
-netG.apply(weights_init)
+# netG.apply(weights_init)
 print(netG)
 
 class Discriminator(nn.Module):
@@ -150,7 +150,9 @@ class Discriminator(nn.Module):
 netD = Discriminator(ngpu).to(device)
 # Apply the weights_init function to randomly initialize all weights
 #  to mean=0, stdev=0.2.
-netD.apply(weights_init)
+
+# netD.apply(weights_init)
+
 # Print the model
 print(netD)
 
