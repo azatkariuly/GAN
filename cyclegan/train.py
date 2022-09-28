@@ -166,7 +166,7 @@ def main():
             save_checkpoint(disc_H, opt_disc, filename=config.CHECKPOINT_CRITIC_H)
             save_checkpoint(disc_Z, opt_disc, filename=config.CHECKPOINT_CRITIC_Z)
 
-        print('Best FID:', best_FID)
+        print('Epoch:', epoch+1, 'Best FID:', best_FID)
 
 if __name__ == "__main__":
     main()
