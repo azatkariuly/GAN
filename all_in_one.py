@@ -47,7 +47,7 @@ ngf = 64
 # Size of feature maps in discriminator
 ndf = 64
 # Number of training epochs
-num_epochs = 70
+num_epochs = 3
 # different Learning rate for optimizers
 g_lr = 0.0001
 d_lr = 0.0004
@@ -438,3 +438,12 @@ for epoch in range(num_epochs):
         print('[%d/%d]\tLoss_D: %.4f\tLoss_G: %.4f\tFretchet_Distance: %.4f\t Best FID: %.4f'
                       % (epoch+1, num_epochs,
                          errD.item(), errG.item(),fretchet_dist, best_res))
+
+plt.figure(figsize=(10,5))
+plt.title("Generator and Discriminator Loss During Training (fp32)")
+plt.plot(G_losses,label="G")
+plt.plot(D_losses,label="D")
+plt.xlabel("iterations")
+plt.ylabel("Loss")
+plt.legend()
+plt.savefid('fp32.png')
