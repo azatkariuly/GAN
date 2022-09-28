@@ -47,7 +47,7 @@ class TransposeConv2dLSQ(nn.ConvTranspose2d):
 
     def forward(self, x):
         if self.init_state == 0:
-            self.step_size.data.copy_(2 * x.abs().mean() / math.sqrt(2 ** self.nbits - 1))
+            self.step_size.data.copy_(2 * self.weight.abs().mean() / math.sqrt(2 ** self.nbits - 1))
             self.init_state.fill_(1)
 
         w_q = quantizeLSQ(self.weight, self.step_size, self.nbits)
@@ -77,7 +77,7 @@ class Conv2dLSQ(nn.Conv2d):
 
     def forward(self, input):
         if self.init_state == 0:
-            self.step_size.data.copy_(2 * x.abs().mean() / math.sqrt(2 ** self.nbits - 1))
+            self.step_size.data.copy_(2 * self.weight.abs().mean() / math.sqrt(2 ** self.nbits - 1))
             self.init_state.fill_(1)
 
         w_q = quantizeLSQ(self.weight, self.step_size, self.nbits)
