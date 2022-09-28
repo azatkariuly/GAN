@@ -31,6 +31,10 @@ import os
 
 import time
 
+from quantization_modules import Conv2dLSQ, TransposeConv2dLSQ
+
+nbits = 2
+
 SEED=42
 random.seed(SEED)
 torch.manual_seed(SEED)
@@ -80,15 +84,15 @@ class Generator(nn.Module):
             nn.BatchNorm2d(ngf * 8),
             nn.ReLU(True),
             # state size. (ngf*8) x 4 x 4
-            nn.ConvTranspose2d(ngf * 8, ngf * 4, 4, 2, 1, bias=False),
+            TransposeConv2dLSQ(ngf * 8, ngf * 4, 4, 2, 1, bias=False, nbits=nbits),
             nn.BatchNorm2d(ngf * 4),
             nn.ReLU(True),
             # state size. (ngf*4) x 8 x 8
-            nn.ConvTranspose2d( ngf * 4, ngf * 2, 4, 2, 1, bias=False),
+            TransposeConv2dLSQ( ngf * 4, ngf * 2, 4, 2, 1, bias=False, nbits=nbits),
             nn.BatchNorm2d(ngf * 2),
             nn.ReLU(True),
             # state size. (ngf*2) x 16 x 16
-            nn.ConvTranspose2d( ngf * 2, ngf, 4, 2, 1, bias=False),
+            TransposeConv2dLSQ( ngf * 2, ngf, 4, 2, 1, bias=False, nbits=nbits),
             nn.BatchNorm2d(ngf),
             nn.ReLU(True),
             # state size. (ngf) x 32 x 32
