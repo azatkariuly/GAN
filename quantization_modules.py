@@ -33,7 +33,7 @@ def quantizeLSQ(v, s, p, isActivation=False):
     vhat = vbar*s
     return vhat
 
-class TransposeConv2dLSQ(nn.Module):
+class TransposeConv2dLSQ(nn.ConvTranspose2d):
     def __init__(self, in_channels, out_channels, kernel_size, stride=1,
                  padding=0, dilation=1, groups=1, bias=True, **kwargs_q):
         super(TransposeConv2dLSQ, self).__init__()
