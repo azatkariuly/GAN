@@ -189,8 +189,8 @@ def calculate_frechet_distance(mu1, sigma1, mu2, sigma2, eps=1e-6):
 def calculate_fretchet(images_real, images_fake, model):
      # mu_1,std_1 = calculate_activation_statistics(images_real,model,cuda=True)
      # mu_2,std_2 = calculate_activation_statistics(images_fake,model,cuda=True)
-     mu_1, std_1 = torch.mean(images_real).cpu(), cov(images_real.view(-1).cpu().detach().numpy())
-     mu_2, std_2 = torch.mean(images_fake).cpu(), cov(images_fake.view(-1).cpu().detach().numpy())
+     mu_1, std_1 = torch.mean(images_real).detach().numpy(), cov(images_real.view(-1).cpu().detach().numpy())
+     mu_2, std_2 = torch.mean(images_fake).detach().numpy(), cov(images_fake.view(-1).cpu().detach().numpy())
 
      """get fretched distance"""
      fid_value = calculate_frechet_distance(mu_1, std_1, mu_2, std_2)
