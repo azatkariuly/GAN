@@ -98,11 +98,11 @@ class Generator(nn.Module):
             nn.BatchNorm2d(64 * 2),
             nn.ReLU(True),
             # state size. (ngf*2) x 16 x 16
-            nn.ConvTranspose2d( 64 * 2, 64, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(64),
-            nn.ReLU(True),
+            # nn.ConvTranspose2d( 64 * 2, 64, 4, 2, 1, bias=False),
+            # nn.BatchNorm2d(64),
+            # nn.ReLU(True),
             # state size. (ngf) x 32 x 32
-            nn.ConvTranspose2d( 64, 3, 4, 2, 1, bias=False),
+            nn.ConvTranspose2d( 64 * 2, 3, 4, 2, 1, bias=False),
             nn.Tanh()
             # state size. (nc) x 64 x 64
         )
@@ -136,11 +136,11 @@ class Discriminator(nn.Module):
             nn.BatchNorm2d(64 * 4),
             nn.LeakyReLU(0.2, inplace=True),
             # state size. (ndf*4) x 8 x 8
-            nn.Conv2d(64 * 4, 64 * 8, 4, 2, 1, bias=False),
-            nn.BatchNorm2d(64 * 8),
-            nn.LeakyReLU(0.2, inplace=True),
+            # nn.Conv2d(64 * 4, 64 * 8, 4, 2, 1, bias=False),
+            # nn.BatchNorm2d(64 * 8),
+            # nn.LeakyReLU(0.2, inplace=True),
             # state size. (ndf*8) x 4 x 4
-            nn.Conv2d(64 * 8, 1, 4, 1, 0, bias=False),
+            nn.Conv2d(64 * 4, 1, 4, 1, 0, bias=False),
             nn.Sigmoid()
         )
 
@@ -166,9 +166,9 @@ optimizerG = idist.auto_optim(
 )
 
 # Training
-
-real_label = 1
-fake_label = 0
+# smoothing
+real_label = 0.9
+fake_label = 0.1
 
 def training_step(engine, data):
     # Set the models for training
