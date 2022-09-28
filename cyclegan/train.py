@@ -12,6 +12,20 @@ from discriminator_model import Discriminator
 from generator_model import Generator
 from utils import calculate_fretchet, InceptionV3
 
+# wrapper class as feature_extractor
+class WrapperInceptionV3(nn.Module):
+
+    def __init__(self, fid_incv3):
+        super().__init__()
+        self.fid_incv3 = fid_incv3
+
+    @torch.no_grad()
+    def forward(self, x):
+        y = self.fid_incv3(x)
+        y = y[0]
+        y = y[:, :, 0, 0]
+        return y
+
 def train_fn(disc_H, disc_Z, gen_Z, gen_H, loader, opt_disc, opt_gen, l1, mse, d_scaler, g_scaler):
     H_reals = 0
     H_fakes = 0
@@ -152,13 +166,17 @@ def main():
     d_scaler = torch.cuda.amp.GradScaler()
 
     block_idx = InceptionV3.BLOCK_INDEX_BY_DIM[2048]
-    temp_model = InceptionV3([block_idx])
-    temp_model = temp_model.cuda()
+    temp_model = InceptionV3([block_idx]).cuda()
+
+    # wrapper model to pytorch_fid model
+    wrapper_model = WrapperInceptionV3(temp_model)
+    wrapper_model.eval();
 
     for epoch in range(config.NUM_EPOCHS):
         e_horse, e_fake_horse = train_fn(disc_H, disc_Z, gen_Z, gen_H, loader, opt_disc, opt_gen, L1, mse, d_scaler, g_scaler)
 
-        fretchet_dist = calculate_fretchet(e_horse, e_fake_horse, temp_model)
+        fretchet_dist = calculate_fretchet(e_horse, e_fake_horse, wrapper_model)
+        print('Epoch:', epoch+1, '; FID:', fretchet_dist)
 
         if config.SAVE_MODEL and best_FID>fretchet_dist:
             best_FID = fretchet_dist
@@ -167,7 +185,7 @@ def main():
             save_checkpoint(disc_H, opt_disc, filename=config.CHECKPOINT_CRITIC_H)
             save_checkpoint(disc_Z, opt_disc, filename=config.CHECKPOINT_CRITIC_Z)
 
-        print('Epoch:', epoch+1, 'Best FID:', best_FID)
+        print('Best FID:', best_FID)
 
 if __name__ == "__main__":
     main()
