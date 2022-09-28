@@ -24,6 +24,7 @@ def train_fn(disc_H, disc_Z, gen_Z, gen_H, loader, opt_disc, opt_gen, l1, mse, d
         # Train Discriminators H and Z
         with torch.cuda.amp.autocast():
             fake_horse = gen_H(zebra)
+            break
             D_H_real = disc_H(horse)
             D_H_fake = disc_H(fake_horse.detach())
             H_reals += D_H_real.mean().item()
