@@ -69,7 +69,7 @@ class Conv2dLSQ(nn.Conv2d):
         super(Conv2dLSQ, self).__init__(in_channels, out_channels, kernel_size, stride=stride,
                                         padding=padding, dilation=dilation, groups=groups, bias=bias)
 
-        self.nbits = kwargs_q['nbits']
+        self.nbits = kwargs['nbits']
         self.step_size = Parameter(torch.Tensor(1))
 
         #buffer is not updated for optim.step
