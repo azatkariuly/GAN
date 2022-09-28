@@ -263,140 +263,24 @@ def store_images(engine):
     img_list.append(fake)
 
 # FID and IS scores
-from ignite.metrics import FID, InceptionScore
+from ignite.metrics import InceptionScore
 
-fid_metric = FID(device=idist.device())
+# fid_metric = FID(device=idist.device())
 is_metric = InceptionScore(device=idist.device(), output_transform=lambda x: x[0])
 
-# wrapper class as feature_extractor
-class WrapperInceptionV3(nn.Module):
-
-    def __init__(self, fid_incv3):
-        super().__init__()
-        self.fid_incv3 = fid_incv3
-
-    @torch.no_grad()
-    def forward(self, x):
-        y = self.fid_incv3(x)
-        y = y[0]
-        y = y[:, :, 0, 0]
-        return y
-
-class InceptionV3(nn.Module):
-    """Pretrained InceptionV3 network returning feature maps"""
-
-    # Index of default block of inception to return,
-    # corresponds to output of final average pooling
-    DEFAULT_BLOCK_INDEX = 3
-
-    # Maps feature dimensionality to their output blocks indices
-    BLOCK_INDEX_BY_DIM = {
-        64: 0,   # First max pooling features
-        192: 1,  # Second max pooling featurs
-        768: 2,  # Pre-aux classifier features
-        2048: 3  # Final average pooling features
-    }
-
-    def __init__(self,
-                 output_blocks=[DEFAULT_BLOCK_INDEX],
-                 resize_input=True,
-                 normalize_input=True,
-                 requires_grad=False):
-
-        super(InceptionV3, self).__init__()
-
-        self.resize_input = resize_input
-        self.normalize_input = normalize_input
-        self.output_blocks = sorted(output_blocks)
-        self.last_needed_block = max(output_blocks)
-
-        assert self.last_needed_block <= 3, \
-            'Last possible output block index is 3'
-
-        self.blocks = nn.ModuleList()
-
-
-        inception = models.inception_v3(pretrained=True)
-
-        # Block 0: input to maxpool1
-        block0 = [
-            inception.Conv2d_1a_3x3,
-            inception.Conv2d_2a_3x3,
-            inception.Conv2d_2b_3x3,
-            nn.MaxPool2d(kernel_size=3, stride=2)
-        ]
-        self.blocks.append(nn.Sequential(*block0))
-
-        # Block 1: maxpool1 to maxpool2
-        if self.last_needed_block >= 1:
-            block1 = [
-                inception.Conv2d_3b_1x1,
-                inception.Conv2d_4a_3x3,
-                nn.MaxPool2d(kernel_size=3, stride=2)
-            ]
-            self.blocks.append(nn.Sequential(*block1))
-
-        # Block 2: maxpool2 to aux classifier
-        if self.last_needed_block >= 2:
-            block2 = [
-                inception.Mixed_5b,
-                inception.Mixed_5c,
-                inception.Mixed_5d,
-                inception.Mixed_6a,
-                inception.Mixed_6b,
-                inception.Mixed_6c,
-                inception.Mixed_6d,
-                inception.Mixed_6e,
-            ]
-            self.blocks.append(nn.Sequential(*block2))
-
-        # Block 3: aux classifier to final avgpool
-        if self.last_needed_block >= 3:
-            block3 = [
-                inception.Mixed_7a,
-                inception.Mixed_7b,
-                inception.Mixed_7c,
-                nn.AdaptiveAvgPool2d(output_size=(1, 1))
-            ]
-            self.blocks.append(nn.Sequential(*block3))
-
-        for param in self.parameters():
-            param.requires_grad = requires_grad
-
-    def forward(self, inp):
-        outp = []
-        x = inp
-
-        if self.resize_input:
-            x = F.interpolate(x,
-                              size=(299, 299),
-                              mode='bilinear',
-                              align_corners=False)
-
-        if self.normalize_input:
-            x = 2 * x - 1  # Scale from range (0, 1) to range (-1, 1)
-
-        for idx, block in enumerate(self.blocks):
-            x = block(x)
-            if idx in self.output_blocks:
-                outp.append(x)
-
-            if idx == self.last_needed_block:
-                break
-
-        return outp
-
-# pytorch_fid model
-dims = 2048
-block_idx = InceptionV3.BLOCK_INDEX_BY_DIM[dims]
-model = InceptionV3([block_idx]).to(idist.device())
-
-# wrapper model to pytorch_fid model
-wrapper_model = WrapperInceptionV3(model)
-wrapper_model.eval();
-
-# comparable metric
-# pytorch_fid_metric = FID(num_features=dims, feature_extractor=wrapper_model)
+# # wrapper class as feature_extractor
+# class WrapperInceptionV3(nn.Module):
+#
+#     def __init__(self, fid_incv3):
+#         super().__init__()
+#         self.fid_incv3 = fid_incv3
+#
+#     @torch.no_grad()
+#     def forward(self, x):
+#         y = self.fid_incv3(x)
+#         y = y[0]
+#         y = y[:, :, 0, 0]
+#         return y
 
 # Evaluators
 
@@ -420,11 +304,9 @@ def evaluation_step(engine, batch):
         return fake, real
 
 evaluator = Engine(evaluation_step)
-fid_metric.attach(evaluator, "fid")
 is_metric.attach(evaluator, "is")
 # pytorch_fid_metric.attach(evaluator, 'pytorch_fid')
 
-fid_values = []
 is_values = []
 # pytorch_fid = []
 
@@ -433,15 +315,12 @@ is_values = []
 def log_training_results(engine):
     evaluator.run(train_dataloader,max_epochs=1)
     metrics = evaluator.state.metrics
-    fid_score = metrics['fid']
     is_score = metrics['is']
     # pytorch_fid_score = metrics['pytorch_fid']
-    fid_values.append(fid_score)
     is_values.append(is_score)
     # pytorch_fid.append(pytorch_fid_score)
 
     print(f"Epoch [{engine.state.epoch}/5] Metric Scores")
-    print(f"*   FID : {fid_score:4f}")
     print(f"*    IS : {is_score:4f}")
     # print(f"*  PFID : {pytorch_fid_score:4f}")
 
