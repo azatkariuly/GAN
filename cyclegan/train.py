@@ -10,6 +10,7 @@ from tqdm import tqdm
 from torchvision.utils import save_image
 from discriminator_model import Discriminator
 from generator_model import Generator
+from utils import calculate_fretchet, InceptionV3
 
 def train_fn(disc_H, disc_Z, gen_Z, gen_H, loader, opt_disc, opt_gen, l1, mse, d_scaler, g_scaler):
     H_reals = 0
@@ -87,6 +88,8 @@ def train_fn(disc_H, disc_Z, gen_Z, gen_H, loader, opt_disc, opt_gen, l1, mse, d
 
         loop.set_postfix(H_real=H_reals/(idx+1), H_fake=H_fakes/(idx+1))
 
+    return horse, fake_horse
+
 
 
 def main():
@@ -145,14 +148,22 @@ def main():
     g_scaler = torch.cuda.amp.GradScaler()
     d_scaler = torch.cuda.amp.GradScaler()
 
+    block_idx = InceptionV3.BLOCK_INDEX_BY_DIM[2048]
+    temp_model = InceptionV3([block_idx])
+    temp_model = temp_model.cuda()
+
     for epoch in range(config.NUM_EPOCHS):
-        train_fn(disc_H, disc_Z, gen_Z, gen_H, loader, opt_disc, opt_gen, L1, mse, d_scaler, g_scaler)
+        e_horse, e_fake_horse = train_fn(disc_H, disc_Z, gen_Z, gen_H, loader, opt_disc, opt_gen, L1, mse, d_scaler, g_scaler)
 
         if config.SAVE_MODEL:
             save_checkpoint(gen_H, opt_gen, filename=config.CHECKPOINT_GEN_H)
             save_checkpoint(gen_Z, opt_gen, filename=config.CHECKPOINT_GEN_Z)
             save_checkpoint(disc_H, opt_disc, filename=config.CHECKPOINT_CRITIC_H)
             save_checkpoint(disc_Z, opt_disc, filename=config.CHECKPOINT_CRITIC_Z)
+
+
+        fretchet_dist = calculate_fretchet(e_horse, e_fake_horse, temp_model)
+        print('FID:', fretchet_dist)
 
 if __name__ == "__main__":
     main()
