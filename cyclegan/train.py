@@ -93,7 +93,7 @@ def train_fn(disc_H, disc_Z, gen_Z, gen_H, loader, opt_disc, opt_gen, l1, mse, d
 
 
     print(horse.type())
-    print(fake_horse.type())
+    print(fake_horse.float().type())
     return
 
 
