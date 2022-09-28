@@ -23,9 +23,9 @@ import ignite.distributed as idist
 
 from torchvision.datasets import ImageFolder
 
-# ignite.utils.manual_seed(999)
-# ignite.utils.setup_logger(name="ignite.distributed.auto.auto_dataloader", level=logging.WARNING)
-# ignite.utils.setup_logger(name="ignite.distributed.launcher.Parallel", level=logging.WARNING)
+ignite.utils.manual_seed(999)
+ignite.utils.setup_logger(name="ignite.distributed.auto.auto_dataloader", level=logging.WARNING)
+ignite.utils.setup_logger(name="ignite.distributed.launcher.Parallel", level=logging.WARNING)
 
 # Dataset and Transformation
 
