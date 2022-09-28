@@ -417,8 +417,8 @@ for epoch in range(num_epochs):
         # Since we just updated D, perform another forward pass of all-fake batch through D
         output = netD(fake).view(-1)
         # Calculate G's loss based on this output
-        errG = criterion(output, label)
-        # D_G_z2 = output.mean().item()
+        errG = criterion(nn.Sigmoid(output), label)
+        D_G_z2 = output.mean().item()
 
         # Calculate gradients for G
         errG.backward()
