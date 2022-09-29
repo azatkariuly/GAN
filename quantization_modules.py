@@ -52,8 +52,7 @@ class TransposeConv2dLSQ(nn.ConvTranspose2d):
 
         w_q = quantizeLSQ(self.weight, self.step_size, self.nbits)
 
-        out = F.conv_transpose2d(x, w_q, bias=None, stride=self.stride, padding=self.padding,
-                                 dilation=self.dilation, groups=self.groups)
+        out = nn.functional.conv_transpose2d(x, w_q, None, self.stride, self.padding, self.dilation, self.groups)
 
         if not self.bias is None:
             self.bias.org=self.bias.data.clone()

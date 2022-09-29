@@ -127,15 +127,15 @@ class Discriminator(nn.Module):
             nn.Conv2d(nc, ndf, 4, 2, 1, bias=False),
             nn.LeakyReLU(0.2, inplace=True),
             # state size. (ndf) x 32 x 32
-            Conv2dLSQ(ndf, ndf * 2, 4, 2, 1, bias=False, nbits=nbits),
+            nn.Conv2d(ndf, ndf * 2, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ndf * 2),
             nn.LeakyReLU(0.2, inplace=True),
             # state size. (ndf*2) x 16 x 16
-            Conv2dLSQ(ndf * 2, ndf * 4, 4, 2, 1, bias=False, nbits=nbits),
+            nn.Conv2d(ndf * 2, ndf * 4, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ndf * 4),
             nn.LeakyReLU(0.2, inplace=True),
             # state size. (ndf*4) x 8 x 8
-            Conv2dLSQ(ndf * 4, ndf * 8, 4, 2, 1, bias=False, nbits=nbits),
+            nn.Conv2d(ndf * 4, ndf * 8, 4, 2, 1, bias=False),
             nn.BatchNorm2d(ndf * 8),
             nn.LeakyReLU(0.2, inplace=True),
             # state size. (ndf*8) x 4 x 4
@@ -444,7 +444,7 @@ for epoch in range(num_epochs):
                          errD.item(), errG.item(),fretchet_dist, best_res))
 
 plt.figure(figsize=(10,5))
-plt.title("Generator and Discriminator Loss During Training (Discriminator is 2-bit)")
+plt.title("Generator and Discriminator Loss During Training")
 plt.plot(G_losses,label="G")
 plt.plot(D_losses,label="D")
 plt.xlabel("iterations")
