@@ -151,6 +151,3 @@ class Discriminator(nn.Module):
         out=self.last(out)
 
         return out.squeeze(), p1, p2
-
-print(Generator(64))
-print(Discriminator())
