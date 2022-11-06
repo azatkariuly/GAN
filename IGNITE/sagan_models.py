@@ -153,4 +153,4 @@ class Discriminator(nn.Module):
         return out.squeeze(), p1, p2
 
 if __name__ == '__main__':
-    return , Generator(), Discriminator()
+    return Generator(), Discriminator()
