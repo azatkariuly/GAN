@@ -40,7 +40,7 @@ data_transform = transforms.Compose(
 )
 
 train_dataset = ImageFolder(root="./data", transform=data_transform)
-test_dataset = torch.utils.data.Subset(train_dataset, torch.arange(3000))
+# test_dataset = torch.utils.data.Subset(train_dataset, torch.arange(3000))
 
 batch_size = 128
 
@@ -52,13 +52,13 @@ train_dataloader = idist.auto_dataloader(
     drop_last=True,
 )
 
-test_dataloader = idist.auto_dataloader(
-    test_dataset,
-    batch_size=batch_size,
-    num_workers=2,
-    shuffle=False,
-    drop_last=True,
-)
+# test_dataloader = idist.auto_dataloader(
+#     test_dataset,
+#     batch_size=batch_size,
+#     num_workers=2,
+#     shuffle=False,
+#     drop_last=True,
+# )
 
 # real_batch = next(iter(train_dataloader))
 #
@@ -423,7 +423,7 @@ is_values = []
 
 @trainer.on(Events.EPOCH_COMPLETED)
 def log_training_results(engine):
-    evaluator.run(test_dataloader,max_epochs=1)
+    evaluator.run(train_dataloader,max_epochs=1)
     metrics = evaluator.state.metrics
     fid_score = metrics['fid']
     is_score = metrics['is']
