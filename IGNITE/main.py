@@ -113,9 +113,7 @@ def training_step(engine, data):
     b_size = real.size(0)
     label = torch.full((b_size,), real_label, dtype=torch.float, device=idist.device())
     # Forward pass real batch through D
-    o = netD(real)
-    print('ioansoignf', o)
-    output1 = o.view(-1)
+    output1 = netD(real)[0].view(-1)
     # Calculate loss on all-real batch
     errD_real = criterion(output1, label)
     # Calculate gradients for D in backward pass
