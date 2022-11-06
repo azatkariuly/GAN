@@ -13,6 +13,7 @@ import torch.optim as optim
 import torchvision
 import torchvision.transforms as transforms
 import torchvision.utils as vutils
+import torchvision.models as models
 
 import ignite
 from ignite.engine import Engine, Events
