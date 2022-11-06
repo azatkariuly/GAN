@@ -152,5 +152,5 @@ class Discriminator(nn.Module):
 
         return out.squeeze(), p1, p2
 
-print(Generator())
+print(Generator(128))
 print(Discriminator())
